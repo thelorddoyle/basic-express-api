@@ -18,7 +18,7 @@ class User extends Model {
 User.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
@@ -28,7 +28,7 @@ User.init(
       unique: true,
     },
     password: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.TEXT,
       allowNull: false,
       set(value: string) {
         const salt = bcrypt.genSaltSync(10);
