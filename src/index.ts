@@ -28,8 +28,7 @@ const userRouter = Router();
 authRouter.post("/register", async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, password: hashedPassword });
+    const user = await User.create({ username, password });
     res.json(user);
   } catch (error) {
     next(error);
