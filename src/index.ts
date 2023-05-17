@@ -41,23 +41,30 @@ authRouter.post("/login", async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ where: { username } });
+    console.log(`Login attempt: User '${username}' is attempting to login.`);
 
     if (!username || !password) {
+      console.log(
+        `Login attempt: user did not provide a username or password.`
+      );
       return res
         .status(404)
         .json({ message: "Must provide username and password" });
     }
 
     if (!user) {
+      console.log(`Login attempt: No user matches the username: ${username}`);
       return res.status(404).json({ message: "No user matches that username" });
     }
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
+      console.log(`Login attempt: Invalid username or password.`);
       return res.status(401).json({ message: "Invalid username or password" });
     }
 
     const payload = { id: user.id };
     const token = jwt.sign(payload, APP_SECRET_KEY);
+    console.log(`User ${user.username} has successfully logged in.`);
     res.json({ message: "ok", token });
   } catch (error) {
     next(error);
