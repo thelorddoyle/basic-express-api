@@ -13,24 +13,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Print secrets
-        run: |
-          echo "SSH_HOST: ${{ secrets.SSH_HOST }}"
-          echo "SSH_USER: ${{ secrets.SSH_USER }}"
-          echo "SSH_KEY: ${{ secrets.SSH_KEY }}"
-          echo "DB_HOST: ${{ secrets.DB_HOST }}"
-          echo "DB_PORT: ${{ secrets.DB_PORT }}"
-          echo "DB_USER: ${{ secrets.DB_USER }}"
-          echo "DB_PASS: ${{ secrets.DB_PASS }}"
-          echo "DB_NAME: ${{ secrets.DB_NAME }}"
-          echo "APP_SECRET_KEY: ${{ secrets.APP_SECRET_KEY }}"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
