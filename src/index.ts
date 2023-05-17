@@ -25,6 +25,8 @@ app.use(express.json());
 const authRouter = Router();
 const userRouter = Router();
 
+// auth routes
+
 authRouter.post("/register", async (req, res, next) => {
   try {
     const { username, password } = req.body;
@@ -50,18 +52,6 @@ authRouter.post("/login", async (req, res, next) => {
       return res.status(404).json({ message: "No user matches that username" });
     }
 
-    // debugging a login issue
-    console.log("user: ", user);
-
-    console.log("password in req: ", password);
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("hashedPassword from req: ", hashedPassword);
-    console.log("password in db: ", user?.password);
-
-    const passwordMatch = await bcrypt.compare(password, user?.password);
-
-    console.log("do the passwords match: ", passwordMatch); // Add this line
-
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
@@ -74,7 +64,9 @@ authRouter.post("/login", async (req, res, next) => {
   }
 });
 
-userRouter.get("/", async (req, res, next) => {
+// user routes
+
+userRouter.get("/", async (_, res, next) => {
   try {
     const users = await User.findAll();
     if (!users || users.length === 0) {
@@ -111,7 +103,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     .json({ message: err.message || "Internal server error" });
 });
 
-// Database
+// Database setup, forcing a sync if in dev
 sequelize
   .authenticate()
   .then(() => console.log("Database connected."))
