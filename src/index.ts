@@ -43,9 +43,10 @@ const authenticateToken = (req: any, res: any, next: any) => {
 // Routes setup
 const authRouter = Router();
 const userRouter = Router();
+authRouter.use(authenticateToken);
 
-// Auth routes
-authRouter.post("/register", async (req, res, next) => {
+// User routes
+userRouter.post("/register", async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const user = await User.create({ username, password });
@@ -55,7 +56,7 @@ authRouter.post("/register", async (req, res, next) => {
   }
 });
 
-authRouter.post("/login", async (req, res, next) => {
+userRouter.post("/login", async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ where: { username } });
@@ -73,8 +74,8 @@ authRouter.post("/login", async (req, res, next) => {
   }
 });
 
-// User routes
-userRouter.get("/", authenticateToken, async (_, res, next) => {
+// Auth routes
+authRouter.get("/get-users/", async (_, res, next) => {
   try {
     const users = await User.findAll();
     if (!users || users.length === 0)
@@ -85,7 +86,7 @@ userRouter.get("/", authenticateToken, async (_, res, next) => {
   }
 });
 
-userRouter.delete("/:id", async (req, res, next) => {
+authRouter.delete("/delete-user/:id", async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
