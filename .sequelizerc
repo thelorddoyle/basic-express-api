@@ -1,6 +1,4 @@
-import path from 'path'
-
-const path = path();
+const path = require('path');
 
 module.exports = {
   'config': path.resolve('src', 'config', 'config.js'),
