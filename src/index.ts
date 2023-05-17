@@ -40,12 +40,27 @@ authRouter.post("/login", async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ where: { username } });
+
+    if (!username || !password) {
+      return res
+        .status(404)
+        .json({ message: "Must provide username and password" });
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: "No user matches that username" });
+    }
+
     // debugging a login issue
     console.log("user: ", user);
 
     console.log("password in req: ", password);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("hashedPassword from req: ", hashedPassword);
     console.log("password in db: ", user?.password);
-    const passwordMatch = await bcrypt.compare(password, user?.password ?? "");
+
+    const passwordMatch = await bcrypt.compare(password, user?.password);
+
     console.log("do the passwords match: ", passwordMatch); // Add this line
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
