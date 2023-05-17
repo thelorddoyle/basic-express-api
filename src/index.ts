@@ -40,6 +40,13 @@ authRouter.post("/login", async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ where: { username } });
+    // debugging a login issue
+    console.log("user: ", user);
+
+    console.log("user password: ", user?.password ?? "");
+
+    const passwordMatch = await bcrypt.compare(password, user?.password ?? "");
+    console.log(passwordMatch); // Add this line
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid username or password" });
