@@ -43,10 +43,10 @@ authRouter.post("/login", async (req, res, next) => {
     // debugging a login issue
     console.log("user: ", user);
 
-    console.log("user password: ", user?.password ?? "");
-
+    console.log("password in req: ", password);
+    console.log("password in db: ", user?.password);
     const passwordMatch = await bcrypt.compare(password, user?.password ?? "");
-    console.log(passwordMatch); // Add this line
+    console.log("do the passwords match: ", passwordMatch); // Add this line
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid username or password" });
