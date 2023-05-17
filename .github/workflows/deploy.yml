@@ -41,8 +41,9 @@ jobs:
           script: |
             pm2 delete all
             rm -rf /var/www/basic-express-api
-            cp -R . /var/www/basic-express-api
-            cd /var/www/basic-express-api
+            cd /var/www/
+            git clone https://github.com/thelorddoyle/basic-express-api.git
+            cd basic-express-api
             npm install
             export DB_HOST=${{ secrets.DB_HOST }}
             export DB_PORT=${{ secrets.DB_PORT }}
