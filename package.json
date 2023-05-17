@@ -8,8 +8,9 @@
     "build": "npm run clean && tsc",
     "start": "node build/index.js",
     "dev": "ts-node-dev --no-notify --respawn --transpile-only src/index.ts",
-    "db:migrate": "ts-node ./node_modules/.bin/sequelize db:migrate",
-    "db:undo": "ts-node ./node_modules/.bin/sequelize db:migrate:undo"
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:undomigrate": "npx sequelize-cli db:migrate:undo",
+    "db:seed": "npx sequelize-cli db:seed:all"
   },
   "keywords": [
     "basic",
