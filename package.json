@@ -7,7 +7,9 @@
     "clean": "rm -rf build",
     "build": "npm run clean && tsc",
     "start": "node build/index.js",
-    "dev": "ts-node-dev --no-notify --respawn --transpile-only src/index.ts"
+    "dev": "ts-node-dev --no-notify --respawn --transpile-only src/index.ts",
+    "db:migrate": "ts-node ./node_modules/.bin/sequelize db:migrate",
+    "db:undo": "ts-node ./node_modules/.bin/sequelize db:migrate:undo"
   },
   "keywords": [
     "basic",

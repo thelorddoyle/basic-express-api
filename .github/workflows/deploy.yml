@@ -1,0 +1,41 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            pm2 delete all
+            rm -rf /var/www/basic-express-api
+            cp -R . /var/www/basic-express-api
+            cd /var/www/basic-express-api
+            npm install
+            export DB_HOST=${{ secrets.DB_HOST }}
+            export DB_PORT=${{ secrets.DB_PORT }}
+            export DB_USER=${{ secrets.DB_USER }}
+            export DB_PASS=${{ secrets.DB_PASS }}
+            export DB_NAME=${{ secrets.DB_NAME }}
+            export APP_SECRET_KEY=${{ secrets.APP_SECRET_KEY }}
+            npm run build
+            pm2 start npm --name "basic-express-api" -- start
